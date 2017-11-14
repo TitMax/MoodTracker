@@ -1,3 +1,6 @@
+.gradle
+/build
+
 # Built application files
 /*/build/
 
@@ -9,6 +12,9 @@ local.properties
 
 # Gradle generated files
 .gradle/
+.gradletasknamecache
+gradle.properties
+build/
 
 # Signing files
 .signing/
