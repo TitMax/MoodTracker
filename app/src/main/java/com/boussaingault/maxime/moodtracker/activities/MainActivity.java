@@ -81,12 +81,15 @@ public class MainActivity extends FragmentActivity {
 
         mEditTextNote = (EditText) dialogView.findViewById(R.id.layout_add_note_edit_text);
         mEditTextNote.setText(note);
+        mEditTextNote.setSelection(mEditTextNote.length());
 
         dialogBuilder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (mEditTextNote.getText().toString().equals(""))
-                    Toast.makeText(MainActivity.this, "Aucune note trouvée, annulation", Toast.LENGTH_SHORT).show();
+                if (mEditTextNote.getText().toString().equals("")) {
+                    note = mEditTextNote.getText().toString();
+                    Toast.makeText(MainActivity.this, "Aucune note trouvée", Toast.LENGTH_SHORT).show();
+                }
                 else {
                     note = mEditTextNote.getText().toString();
                     Toast.makeText(MainActivity.this, "Note ajoutée", Toast.LENGTH_SHORT).show();
