@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MoodTracker</string>
-
+    <string name="note_add_desc">Add note button</string>
+    <string name="history_desc">History button</string>
 </resources>
