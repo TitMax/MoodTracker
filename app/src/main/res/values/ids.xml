@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="smiley_super_happy" />
+    <item type="id" name="smiley_happy" />
+    <item type="id" name="smiley_normal" />
+    <item type="id" name="smiley_disappointed" />
+    <item type="id" name="smiley_sad" />
+</resources>
