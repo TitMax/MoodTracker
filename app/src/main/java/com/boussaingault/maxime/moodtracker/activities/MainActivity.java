@@ -4,10 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -15,8 +12,12 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.boussaingault.maxime.moodtracker.R;
-import com.boussaingault.maxime.moodtracker.fragments.SmileyFragment;
 import com.boussaingault.maxime.moodtracker.models.VerticalViewPager;
+import com.boussaingault.maxime.moodtracker.models.ViewPagerAdapter;
+
+/**
+ * Created by Maxime Boussaingault on 14/11/2017.
+ */
 
 public class MainActivity extends FragmentActivity {
 
@@ -25,6 +26,8 @@ public class MainActivity extends FragmentActivity {
     private ImageButton mImageButtonHistory;
     private EditText mEditTextNote;
     private String note = "";
+    private String[] moods = {"Sad", "Disappointed", "Normal", "Happy", "Super Happy"};
+    private int currentMoodId = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +37,8 @@ public class MainActivity extends FragmentActivity {
         mImageButtonAddNote = (ImageButton) findViewById(R.id.activity_main_note_add_btn);
         mImageButtonHistory = (ImageButton) findViewById(R.id.activity_main_history_btn);
 
-        mVerticalViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        mVerticalViewPager.setCurrentItem(3);
+        mVerticalViewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+        mVerticalViewPager.setCurrentItem(currentMoodId);
 
         mImageButtonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,26 +54,6 @@ public class MainActivity extends FragmentActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    private class MyPagerAdapter extends FragmentPagerAdapter {
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            SmileyFragment smileyFragment = new SmileyFragment();
-            Bundle bundle = new Bundle();
-            bundle.putInt("current_page", position);
-            smileyFragment.setArguments(bundle);
-            return smileyFragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 5;
-        }
     }
 
     private void AddNoteDialog() {
