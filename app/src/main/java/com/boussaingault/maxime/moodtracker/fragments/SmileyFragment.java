@@ -9,57 +9,43 @@ import android.widget.ImageView;
 
 import com.boussaingault.maxime.moodtracker.R;
 
+/**
+ * Created by Maxime Boussaingault on 14/11/2017.
+ */
+
 public class SmileyFragment extends Fragment {
+
+    private static final String MOOD = "mood";
+    private static final String BACKGROUND = "background";
+
+    private String mMood;
+    private String mBackground;
 
     private View mView;
     private ImageView mImageView;
-    private int position;
+
+    public static SmileyFragment newInstance(String mood, String background) {
+        SmileyFragment smileyFragment = new SmileyFragment();
+        Bundle args = new Bundle();
+        args.putString(MOOD, mood);
+        args.putString(BACKGROUND, background);
+        smileyFragment.setArguments(args);
+        return smileyFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        position = bundle.getInt("current_page", 3);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        mMood = getArguments() != null ? getArguments().getString(MOOD) : "happy";
+        mBackground = getArguments() != null ? getArguments().getString(BACKGROUND) : "light_sage";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_smiley, container, false);
-        mImageView = (ImageView) mView.findViewById(R.id.main_page_fragment_image_view);
-
-        switch (position) {
-            case 0:
-                setImageView("sad", "faded_red" );
-                return mView;
-            case 1:
-                setImageView("disappointed", "warm_grey" );
-                return mView;
-            case 2:
-                setImageView("normal", "cornflower_blue_65" );
-                return mView;
-            case 3:
-                setImageView("happy", "light_sage");
-                return mView;
-            case 4:
-                setImageView("super_happy", "banana_yellow" );
-                return mView;
-            default:
-                return null;
-        }
-    }
-
-    private void setImageView(String smiley, String color) {
-        int image = getResources().getIdentifier("smiley_" + smiley, "drawable", getActivity().getPackageName());
-        int id = getResources().getIdentifier("smiley_" + smiley, "id", getActivity().getPackageName());
-        int background = getResources().getIdentifier(color, "color", getActivity().getPackageName());
-
-        mImageView.setImageResource(image);
-        mImageView.setId(id);
-        mView.setBackgroundColor(getResources().getColor(background));
+        mView.setBackgroundColor(getResources().getColor(getResources().getIdentifier(mBackground, "color", getActivity().getPackageName())));
+        mImageView = mView.findViewById(R.id.main_page_fragment_image_view);
+        mImageView.setImageResource(getResources().getIdentifier("smiley_" + mMood, "drawable", getActivity().getPackageName()));
+        return mView;
     }
 }

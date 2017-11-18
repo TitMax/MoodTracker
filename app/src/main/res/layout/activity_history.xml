@@ -5,6 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@android:color/darker_gray"
     tools:context="com.boussaingault.maxime.moodtracker.activities.HistoryActivity">
 
+    <ListView
+        android:id="@+id/activity_history_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:clipToPadding="false"
+        android:scrollbars="none"/>
 </LinearLayout>
