@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="150dp"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/alert_dialog_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/darker_gray"
+        android:text="@string/commentaire" />
+
+    <EditText
+        android:id="@+id/alert_dialog_edit_text"
+        android:labelFor="@+id/alert_dialog_edit_text"
+        style="@style/Widget.AppCompat.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/alert_dialog_title_text_view"
+        android:textColor="@android:color/black"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:inputType="text"/>
+
+</RelativeLayout>
