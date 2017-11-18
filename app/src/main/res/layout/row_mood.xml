@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_mood_frame_layout"
+    android:layout_width="match_parent"
+    android:layout_height="94dp"
+    android:elevation="5dp"
+    android:background="@color/light_sage" >
+
+    <TextView
+        android:id="@+id/row_mood_date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:textStyle="bold"
+        android:textColor="#3b3b3b"
+        android:text="@string/text" />
+
+    <ImageButton
+        android:id="@+id/row_mood_comment_image_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_gravity="center|end"
+        android:background="@drawable/ic_comment_black_48px"
+        android:visibility="gone"
+        android:contentDescription="@string/comment_desc"/>
+</FrameLayout>
