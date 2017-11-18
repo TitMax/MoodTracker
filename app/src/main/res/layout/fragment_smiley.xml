@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/main_page_fragment_image_view"
+        android:contentDescription="@string/smiley_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
