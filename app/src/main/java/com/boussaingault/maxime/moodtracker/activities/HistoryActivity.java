@@ -21,7 +21,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private ListView mListView;
     private DatabaseManager mDatabaseManager;
-    private ArrayList<MoodData> listMoods = new ArrayList<MoodData>();
+    private ArrayList<MoodData> listMoods = new ArrayList<>();
     private HistoryListAdapter adapter;
 
     @Override
