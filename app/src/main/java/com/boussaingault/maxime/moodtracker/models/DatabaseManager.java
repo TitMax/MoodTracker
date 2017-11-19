@@ -67,10 +67,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public MoodData getCurrentMood() {
         SQLiteDatabase db = this.getReadableDatabase();
-        MoodData currentMood = new MoodData();
-        String selectCurrent = "SELECT * " +
-                "FROM " + TABLE_NAME + " " +
-                "WHERE DATE('NOW', 'LOCALTIME', 'START OF DAY')";
         Cursor cursor = db.query(TABLE_NAME,
                 new String[]{COL_ID, COL_MOOD, COL_COMMENT, COL_COLOR, COL_DATE},
                 COL_DATE + " LIKE DATE('NOW', 'LOCALTIME', 'START OF DAY')",
