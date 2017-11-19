@@ -29,6 +29,7 @@ public class MainActivity extends FragmentActivity {
     private VerticalViewPager mVerticalViewPager;
     private ImageButton mImageButtonAddNote;
     private ImageButton mImageButtonHistory;
+    private ImageButton mImageButtonPieChart;
     private EditText mEditTextNote;
     private String comment = "";
     private String[] mood = {"Sad", "Disappointed", "Normal", "Happy", "Super Happy"};
@@ -43,6 +44,7 @@ public class MainActivity extends FragmentActivity {
         mVerticalViewPager = findViewById(R.id.activity_main_view_pager);
         mImageButtonAddNote = (ImageButton) findViewById(R.id.activity_main_note_add_btn);
         mImageButtonHistory = (ImageButton) findViewById(R.id.activity_main_history_btn);
+        mImageButtonPieChart = (ImageButton) findViewById(R.id.activity_main_pie_chart_btn);
 
         mImageButtonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +57,14 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mImageButtonPieChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, PieChartHistoryActivity.class);
                 startActivity(intent);
             }
         });
