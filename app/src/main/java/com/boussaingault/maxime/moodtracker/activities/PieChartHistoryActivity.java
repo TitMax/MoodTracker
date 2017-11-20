@@ -36,7 +36,6 @@ public class PieChartHistoryActivity extends AppCompatActivity {
     private String[] moodsFR = {"Triste", "Déçu", "Normal", "Heureux", "Super Heureux"};
     private int maxDays = 0;
     private int daysNumber = 7;
-    private String currentValue = String.valueOf(daysNumber) + " jours";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
             mSeekBar.setVisibility(View.VISIBLE);
             mTextViewMin.setText(String.valueOf(7));
             mTextViewMax.setText(String.valueOf(maxDays));
-            mTextViewCurrent.setText(currentValue);
+            mTextViewCurrent.setText(String.valueOf(daysNumber) + " jours");
             setData();
         } else
             mSeekBar.setVisibility(View.GONE);
@@ -66,7 +65,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
                 mSeekBar.setMax(maxDays - 7);
                 daysNumber = progress + 7;
-                mTextViewCurrent.setText(currentValue);
+                mTextViewCurrent.setText(String.valueOf(daysNumber) + " jours");
             }
 
             @Override
@@ -100,7 +99,6 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         l.setXOffset(10);
 
         mPieChart.setTouchEnabled(false);
-        mPieChart.animateY(1000, Easing.EasingOption.EaseInCirc);
 
         // Text when no data to show
         mPieChart.getPaint(Chart.PAINT_INFO).setTextSize(convertDpToPixel(16));
@@ -112,9 +110,10 @@ public class PieChartHistoryActivity extends AppCompatActivity {
 
     private void setData() {
         List<PieEntry> entries = new ArrayList<>();
-        for (int i = 0; i < moods.length; i++)
-            entries.add(new PieEntry((float)mDatabaseManager.countMoods(moods[i], daysNumber), moodsFR[i]));
-
+        for (int i = 0; i < moods.length; i++) {
+            if (mDatabaseManager.countMoods(moods[i], daysNumber) > 0)
+                entries.add(new PieEntry((float) mDatabaseManager.countMoods(moods[i], daysNumber), moodsFR[i]));
+        }
 
         // Create pieDataSet
         PieDataSet dataSet = new PieDataSet(entries, "");
