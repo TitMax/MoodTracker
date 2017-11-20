@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.boussaingault.maxime.moodtracker.R;
 import com.boussaingault.maxime.moodtracker.models.DatabaseManager;
@@ -29,11 +30,7 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-
-
-
         mListView = (ListView) findViewById(R.id.activity_history_list_view);
-
     }
 
     @Override
@@ -53,9 +50,27 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mDatabaseManager = new DatabaseManager(this);
-        List<MoodData> listHistory = mDatabaseManager.mMoodData();
-        for (MoodData mood : listHistory) {
-            listMoods.add(mood);
+        if (mDatabaseManager.isHistory() != 0) {
+            List<MoodData> listHistory = mDatabaseManager.mMoodData();
+            for (MoodData mood : listHistory)
+                listMoods.add(mood);
+        } else {
+            Toast.makeText(this, "Pas encore d'historique? Revenez demain!", Toast.LENGTH_LONG).show();
+            /*      UNCOMMENT BELOW TO POPULATE THE SQLITE DATABASE       */
+/*
+            String[] mood = {"Sad", "Disappointed", "Normal", "Happy", "Super Happy"};
+            String[] color = {"faded_red", "warm_grey", "cornflower_blue_65", "light_sage", "banana_yellow"};
+            mDatabaseManager.insertMood(mood[4],"",color[4], 7);
+            mDatabaseManager.insertMood(mood[2],"No comment...",color[2], 6);
+            mDatabaseManager.insertMood(mood[3],"",color[3], 5);
+            mDatabaseManager.insertMood(mood[4],"Ma pizza était définitivement trop bonne, et une bière en terrasse, c'était top !",color[4], 4);
+            mDatabaseManager.insertMood(mood[1],"",color[1], 3);
+            mDatabaseManager.insertMood(mood[0],"Je suis fatigué...",color[0], 2);
+            mDatabaseManager.insertMood(mood[3],"",color[3], 1);
+            List<MoodData> listHistory = mDatabaseManager.mMoodData();
+            for (MoodData mood : listHistory)
+                listMoods.add(mood);
+*/
         }
         mDatabaseManager.close();
         adapter = new HistoryListAdapter(this, R.layout.row_mood, listMoods);
