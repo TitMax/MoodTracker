@@ -3,9 +3,14 @@ package com.boussaingault.maxime.moodtracker.activities;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
 import com.boussaingault.maxime.moodtracker.R;
 import com.boussaingault.maxime.moodtracker.models.DatabaseManager;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -21,54 +26,95 @@ import static com.github.mikephil.charting.utils.Utils.convertDpToPixel;
 
 public class PieChartHistoryActivity extends AppCompatActivity {
 
-    PieChart pieChart;
+    private SeekBar mSeekBar;
+    private PieChart mPieChart;
+    private TextView mTextViewMin;
+    private TextView mTextViewMax;
+    private TextView mTextViewCurrent;
     private DatabaseManager mDatabaseManager;
     private String[] moods = {"Sad", "Disappointed", "Normal", "Happy", "Super Happy"};
     private String[] moodsFR = {"Triste", "Déçu", "Normal", "Heureux", "Super Heureux"};
-    private int daysNumber = 0;
+    private int maxDays = 0;
+    private int daysNumber = 7;
+    private String currentValue = String.valueOf(daysNumber) + " jours";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pie_chart_history);
 
-        pieChart = (PieChart) findViewById(R.id.activity_piechart_history_pie_chart);
+        mSeekBar = (SeekBar) findViewById(R.id.activity_piechart_history_seek_bar);
+        mPieChart = (PieChart) findViewById(R.id.activity_piechart_history_pie_chart);
+        mTextViewMin = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_min_value);
+        mTextViewMax = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_max_value);
+        mTextViewCurrent = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_current_value);
 
-        pieChart.setUsePercentValues(true);
-        pieChart.setDescription(null);
+        mDatabaseManager = new DatabaseManager(this);
+        maxDays = mDatabaseManager.isHistory();
 
-        pieChart.setHoleColor(android.R.color.darker_gray);
-        pieChart.setTransparentCircleAlpha(0);
-        pieChart.setHoleRadius(25);
+        if(maxDays != 0) {
+            mSeekBar.setVisibility(View.VISIBLE);
+            mTextViewMin.setText(String.valueOf(7));
+            mTextViewMax.setText(String.valueOf(maxDays));
+            mTextViewCurrent.setText(currentValue);
+            setData();
+        } else
+            mSeekBar.setVisibility(View.GONE);
 
-        pieChart.setDrawEntryLabels(false);
+        mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                mSeekBar.setMax(maxDays - 7);
+                daysNumber = progress + 7;
+                mTextViewCurrent.setText(currentValue);
+            }
 
-        Legend l = pieChart.getLegend();
-        l.setTextSize(12);
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                setData();
+                mPieChart.notifyDataSetChanged();
+                mPieChart.invalidate();
+            }
+        });
+
+        mPieChart.setUsePercentValues(true);
+        mPieChart.setDescription(null);
+        mPieChart.setExtraOffsets(10,10,10,10);
+
+        mPieChart.setHoleColor(android.R.color.darker_gray);
+        mPieChart.setTransparentCircleAlpha(0);
+        mPieChart.setHoleRadius(25);
+
+        mPieChart.setDrawEntryLabels(false);
+
+        Legend l = mPieChart.getLegend();
+        l.setTextSize(14);
         // Positioning legend to the bottom left of the screen
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setYOffset(12);
+        l.setXOffset(10);
 
-        mDatabaseManager = new DatabaseManager(this);
-        if(mDatabaseManager.isHistory() != 0)
-            setData();
+        mPieChart.setTouchEnabled(false);
+        mPieChart.animateY(1000, Easing.EasingOption.EaseInCirc);
 
-        pieChart.setTouchEnabled(false);
+        // Text when no data to show
+        mPieChart.getPaint(Chart.PAINT_INFO).setTextSize(convertDpToPixel(16));
+        mPieChart.setNoDataText("Pas encore d'historique? Revenez demain!");
+        mPieChart.setNoDataTextColor(Color.BLACK);
 
-        pieChart.getPaint(Chart.PAINT_INFO).setTextSize(convertDpToPixel(16));
-        pieChart.setNoDataText("Pas encore d'historique? Revenez demain!");
-        pieChart.setNoDataTextColor(Color.BLACK);
+        mDatabaseManager.close();
     }
 
     private void setData() {
-        mDatabaseManager = new DatabaseManager(this);
-
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < moods.length; i++)
             entries.add(new PieEntry((float)mDatabaseManager.countMoods(moods[i], daysNumber), moodsFR[i]));
-        mDatabaseManager.close();
+
 
         // Create pieDataSet
         PieDataSet dataSet = new PieDataSet(entries, "");
@@ -81,15 +127,16 @@ public class PieChartHistoryActivity extends AppCompatActivity {
                 getResources().getColor(R.color.banana_yellow)};
 
         dataSet.setColors(colors);
+        dataSet.setSliceSpace(3);
 
         // Create pie data object
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(20);
-        pieChart.setData(data);
+        mPieChart.setData(data);
 
         // refresh pie chart
-        pieChart.invalidate();
+        mPieChart.invalidate();
     }
 
     @Override
