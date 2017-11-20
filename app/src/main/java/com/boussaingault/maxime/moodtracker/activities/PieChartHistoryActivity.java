@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.boussaingault.maxime.moodtracker.R;
 import com.boussaingault.maxime.moodtracker.models.DatabaseManager;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
@@ -16,8 +17,11 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.mikephil.charting.utils.Utils.convertDpToPixel;
+
 public class PieChartHistoryActivity extends AppCompatActivity {
 
+    PieChart pieChart;
     private DatabaseManager mDatabaseManager;
     private String[] moods = {"Sad", "Disappointed", "Normal", "Happy", "Super Happy"};
     private String[] moodsFR = {"Triste", "Déçu", "Normal", "Heureux", "Super Heureux"};
@@ -28,8 +32,37 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pie_chart_history);
 
-        PieChart pieChart = (PieChart) findViewById(R.id.activity_piechart_history_pie_chart);
+        pieChart = (PieChart) findViewById(R.id.activity_piechart_history_pie_chart);
 
+        pieChart.setUsePercentValues(true);
+        pieChart.setDescription(null);
+
+        pieChart.setHoleColor(android.R.color.darker_gray);
+        pieChart.setTransparentCircleAlpha(0);
+        pieChart.setHoleRadius(25);
+
+        pieChart.setDrawEntryLabels(false);
+
+        Legend l = pieChart.getLegend();
+        l.setTextSize(12);
+        // Positioning legend to the bottom left of the screen
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setYOffset(12);
+
+        mDatabaseManager = new DatabaseManager(this);
+        if(mDatabaseManager.isHistory() != 0)
+            setData();
+
+        pieChart.setTouchEnabled(false);
+
+        pieChart.getPaint(Chart.PAINT_INFO).setTextSize(convertDpToPixel(16));
+        pieChart.setNoDataText("Pas encore d'historique? Revenez demain!");
+        pieChart.setNoDataTextColor(Color.BLACK);
+    }
+
+    private void setData() {
         mDatabaseManager = new DatabaseManager(this);
 
         List<PieEntry> entries = new ArrayList<>();
@@ -54,21 +87,39 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(20);
         pieChart.setData(data);
-        pieChart.setUsePercentValues(true);
-        pieChart.getLegend().setTextSize(12);
-        pieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        pieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
-        pieChart.getLegend().setYOffset(12);
-        pieChart.setHoleColor(android.R.color.darker_gray);
-        pieChart.setHoleRadius(25);
-        pieChart.setTransparentCircleAlpha(0);
-        pieChart.setDrawEntryLabels(false);
-        pieChart.setDescription(null);
-        pieChart.setNoDataText("Vous n'avez pas encore d'historique");
-        pieChart.setTouchEnabled(false);
+
         // refresh pie chart
         pieChart.invalidate();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        System.out.println("PieChartHistoryActivity::onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println("PieChartHistoryActivity::onResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.out.println("PieChartHistoryActivity::onPause()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("PieChartHistoryActivity::onStop()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("PieChartHistoryActivity::onDestroy()");
     }
 
 }
