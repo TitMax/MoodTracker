@@ -145,7 +145,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if(days == 0) {
             countMood += " < DATE('NOW', 'START OF DAY')";
         } else {
-            countMood += " BETWEEN DATE('NOW', 'LOCALTIME', 'START OF DAY', '" + days +
+            countMood += " BETWEEN DATE('NOW', 'LOCALTIME', 'START OF DAY', '-" + days +
                     " DAY') AND DATE('NOW', 'LOCALTIME', 'START OF DAY', '-1 DAY')";
         }
         Cursor cursor = getReadableDatabase().rawQuery(countMood, null);
