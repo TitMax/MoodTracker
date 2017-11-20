@@ -14,11 +14,15 @@ import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +39,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
     private String[] moods = {"Sad", "Disappointed", "Normal", "Happy", "Super Happy"};
     private String[] moodsFR = {"Triste", "Déçu", "Normal", "Heureux", "Super Heureux"};
     private int maxDays = 0;
+    private static final int MIN = 7;
     private int daysNumber = 7;
 
     @Override
@@ -63,8 +68,8 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                mSeekBar.setMax(maxDays - 7);
-                daysNumber = progress + 7;
+                mSeekBar.setMax(maxDays - MIN); // substract the minimal value (7)
+                daysNumber = progress + MIN; // Add the minimum value (7)
                 mTextViewCurrent.setText(String.valueOf(daysNumber) + " jours");
             }
 
@@ -99,13 +104,10 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         l.setXOffset(10);
 
         mPieChart.setTouchEnabled(false);
-
         // Text when no data to show
         mPieChart.getPaint(Chart.PAINT_INFO).setTextSize(convertDpToPixel(16));
         mPieChart.setNoDataText("Pas encore d'historique? Revenez demain!");
         mPieChart.setNoDataTextColor(Color.BLACK);
-
-        mDatabaseManager.close();
     }
 
     private void setData() {
@@ -130,12 +132,26 @@ public class PieChartHistoryActivity extends AppCompatActivity {
 
         // Create pie data object
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
+        data.setValueFormatter(new PercentNoDecimalFormatter());
         data.setValueTextSize(20);
         mPieChart.setData(data);
 
         // refresh pie chart
         mPieChart.invalidate();
+    }
+
+    // Method to remove decimal
+    public class PercentNoDecimalFormatter implements IValueFormatter {
+        private DecimalFormat mFormat;
+
+        public PercentNoDecimalFormatter() {
+            mFormat = new DecimalFormat("###,###,###"); // use no decimal
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return mFormat.format(value) + "%";
+        }
     }
 
     @Override
@@ -159,6 +175,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        mDatabaseManager.close();
         System.out.println("PieChartHistoryActivity::onStop()");
     }
 
