@@ -65,6 +65,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(ROW_INSERT);
     }
 
+    // Used when manually populating
+    public void insertMood(String mood, String comment, String color, int daysAgo) {
+        mood = mood.replace("'", "''");
+        comment = comment.replace("'", "''");
+        color = color.replace("'", "''");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        final String ROW_INSERT = "INSERT INTO " + TABLE_NAME +
+                " (" + COL_MOOD + ", " + COL_COMMENT + ", " + COL_COLOR + ", " + COL_DATE + ") " +
+                "VALUES ('" + mood + "', '" + comment + "', '" + color + "'," +
+                "DATE('NOW', 'LOCALTIME', 'START OF DAY', '-" + daysAgo + " DAY'))";
+        db.execSQL(ROW_INSERT);
+    }
+
     public MoodData getCurrentMood() {
         Cursor cursor = getReadableDatabase().query(TABLE_NAME,
                 new String[]{COL_ID, COL_MOOD, COL_COMMENT, COL_COLOR, COL_DATE},
@@ -103,6 +118,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         cursor.close();
         return listMoods;
+    }
+
+    // To verify if there are entry before current day
+    public int isHistory() {
+        int count = 0;
+        String selectCount =  "SELECT COUNT (*)" +
+                " FROM " + TABLE_NAME +
+                " WHERE " + COL_DATE + " < DATE('NOW', 'START OF DAY')";
+        Cursor cursor = getReadableDatabase().rawQuery(selectCount, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
     }
 
     public int countMoods(String mood, int days) {
