@@ -66,8 +66,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public MoodData getCurrentMood() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME,
+        Cursor cursor = getReadableDatabase().query(TABLE_NAME,
                 new String[]{COL_ID, COL_MOOD, COL_COMMENT, COL_COLOR, COL_DATE},
                 COL_DATE + " LIKE DATE('NOW', 'LOCALTIME', 'START OF DAY')",
                 null, null, null, null);
@@ -84,14 +83,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cursor.close();
         return currentMood;
     }
+
     public List<MoodData> mMoodData() {
-        SQLiteDatabase db = this.getReadableDatabase();
         List<MoodData> listMoods = new ArrayList<>();
         String selectMood = "SELECT * " +
                 "FROM " + TABLE_NAME + " " +
-                "WHERE DATE BETWEEN DATE('NOW', 'LOCALTIME', 'START OF DAY', '-7 DAY') " +
+                "WHERE " + COL_DATE + " BETWEEN DATE('NOW', 'LOCALTIME', 'START OF DAY', '-7 DAY') " +
                 "AND DATE('NOW', 'LOCALTIME', 'START OF DAY', '-1 DAY')";
-        Cursor cursor = db.rawQuery(selectMood, null);
+        Cursor cursor = getReadableDatabase().rawQuery(selectMood, null);
 
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
@@ -102,7 +101,30 @@ public class DatabaseManager extends SQLiteOpenHelper {
             listMoods.add(moodData);
             cursor.moveToNext();
         }
-        db.close();
+        cursor.close();
         return listMoods;
+    }
+
+    public int countMoods(String mood, int days) {
+        int moodCount = 0;
+
+        String countMood =  "SELECT COUNT (*)" +
+                " FROM " + TABLE_NAME +
+                " WHERE " + COL_MOOD + " = '" + mood + "'" +
+                " AND " + COL_DATE;
+        if(days == 0) {
+            countMood += " < DATE('NOW', 'START OF DAY')";
+        } else {
+            countMood += " BETWEEN DATE('NOW', 'LOCALTIME', 'START OF DAY', '" + days +
+                    " DAY') AND DATE('NOW', 'LOCALTIME', 'START OF DAY', '-1 DAY')";
+        }
+        Cursor cursor = getReadableDatabase().rawQuery(countMood, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            moodCount = cursor.getInt(0);
+        }
+        cursor.close();
+        return moodCount;
     }
 }
