@@ -136,6 +136,7 @@ public class MainActivity extends FragmentActivity {
             currentMoodId = 3; // Initialize the current mood to happy
             comment = ""; // Clear comment
         }
+        mDatabaseManager.close(); // Close the database
         // set the ViewPagerAdapter to show fragments
         mVerticalViewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
         mVerticalViewPager.setCurrentItem(currentMoodId); // Set the pager to the current mood fragment
@@ -148,8 +149,9 @@ public class MainActivity extends FragmentActivity {
         super.onPause();
         int i = mVerticalViewPager.getCurrentItem(); // get the current pager position
         // Insert or replace the current mood, comment and color in the database
+        mDatabaseManager = new DatabaseManager(this);
         mDatabaseManager.insertMood(mood[i], comment, color[i]);
-        mDatabaseManager.close(); // Close the database
+        mDatabaseManager.close();
         System.out.println("MainActivity::onPause()");
     }
 
