@@ -24,6 +24,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pie_chart_history);
 
+        // Wire widgets
         mSeekBar = (SeekBar) findViewById(R.id.activity_piechart_history_seek_bar);
         mPieChart = (PieChart) findViewById(R.id.activity_piechart_history_pie_chart);
         mImageViewShadow = (ImageView) findViewById(R.id.activity_piechart_history_shadow_image);
@@ -56,40 +58,40 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         mTextViewMax = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_max_value);
         mTextViewCurrent = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_current_value);
 
-        mDatabaseManager = new DatabaseManager(this);
-        maxDays = mDatabaseManager.isHistory();
+        mDatabaseManager = new DatabaseManager(this); // Open database
+        maxDays = mDatabaseManager.isHistory(); // Get the count of entries using isHistory() method
 
-        if(maxDays != 0) {
-            mImageViewShadow.setVisibility(View.VISIBLE);
-            mSeekBar.setVisibility(View.VISIBLE);
-            mTextViewMin.setText(String.valueOf(7));
+        if(maxDays != 0) { // If there is an history
+            // Initialize the display
+            mImageViewShadow.setVisibility(View.VISIBLE); // GONE by default
+            mSeekBar.setVisibility(View.VISIBLE); // GONE by default
+            mTextViewMin.setText(String.valueOf(MIN));
             mTextViewMax.setText(String.valueOf(maxDays));
-            mTextViewCurrent.setText(String.valueOf(daysNumber) + " jours");
-            setData();
-        } else
-            mSeekBar.setVisibility(View.GONE);
+            mTextViewCurrent.setText(MessageFormat.format("{0} jours", daysNumber));
+            setData(); // Call piechart setData() method
+        }
 
         mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
                 mSeekBar.setMax(maxDays - MIN); // substract the minimal value (7)
                 daysNumber = progress + MIN; // Add the minimum value (7)
-                mTextViewCurrent.setText(String.valueOf(daysNumber) + " jours");
+                mTextViewCurrent.setText(MessageFormat.format("{0} jours", daysNumber));
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
+            // Called when user release the seekbar
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                setData();
-                mPieChart.notifyDataSetChanged();
-                mPieChart.invalidate();
+                setData();  // update piechart data with the new range of the history
+                mPieChart.notifyDataSetChanged(); // Notify that the data set changed
+                mPieChart.invalidate(); // Refresh the pie chart
             }
         });
 
-        mPieChart.setUsePercentValues(true);
+        mPieChart.setUsePercentValues(true); // transform values in percent values
         mPieChart.setDescription(null);
         mPieChart.setExtraOffsets(10,10,10,10);
 
@@ -97,8 +99,9 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         mPieChart.setTransparentCircleAlpha(0);
         mPieChart.setHoleRadius(25);
 
-        mPieChart.setDrawEntryLabels(false);
+        mPieChart.setDrawEntryLabels(false);    // hide labels (moods)
 
+        /*      Configure the legend        */
         Legend l = mPieChart.getLegend();
         l.setTextSize(14);
         // Positioning legend to the bottom left of the screen
@@ -107,13 +110,15 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
         l.setXOffset(10);
 
-        mPieChart.setTouchEnabled(false);
-        // Text when no data to show
+        mPieChart.setTouchEnabled(false); // disable the touch on the pie chart (to disable rotation)
+
+        /*      Text when no data to show       */
         mPieChart.getPaint(Chart.PAINT_INFO).setTextSize(convertDpToPixel(16));
         mPieChart.setNoDataText("Pas encore d'historique? Revenez demain!");
         mPieChart.setNoDataTextColor(Color.BLACK);
     }
 
+    // Method to count number of each mood and set the pie chart data
     private void setData() {
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < moods.length; i++) {
