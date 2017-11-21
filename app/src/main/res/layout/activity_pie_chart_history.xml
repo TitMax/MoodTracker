@@ -8,12 +8,14 @@
     tools:context="com.boussaingault.maxime.moodtracker.activities.PieChartHistoryActivity">
 
     <ImageView
+        android:id="@+id/activity_piechart_history_shadow_image"
         android:layout_width="326dp"
         android:layout_height="326dp"
         android:layout_gravity="top|center"
         android:layout_marginTop="74dp"
         android:layout_marginStart="4dp"
         android:background="@drawable/donut_shadow"
+        android:visibility="gone"
         android:alpha="0.10"/>
 
     <com.github.mikephil.charting.charts.PieChart

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
 
     private SeekBar mSeekBar;
     private PieChart mPieChart;
+    private ImageView mImageViewShadow;
     private TextView mTextViewMin;
     private TextView mTextViewMax;
     private TextView mTextViewCurrent;
@@ -49,6 +51,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
 
         mSeekBar = (SeekBar) findViewById(R.id.activity_piechart_history_seek_bar);
         mPieChart = (PieChart) findViewById(R.id.activity_piechart_history_pie_chart);
+        mImageViewShadow = (ImageView) findViewById(R.id.activity_piechart_history_shadow_image);
         mTextViewMin = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_min_value);
         mTextViewMax = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_max_value);
         mTextViewCurrent = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_current_value);
@@ -57,6 +60,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         maxDays = mDatabaseManager.isHistory();
 
         if(maxDays != 0) {
+            mImageViewShadow.setVisibility(View.VISIBLE);
             mSeekBar.setVisibility(View.VISIBLE);
             mTextViewMin.setText(String.valueOf(7));
             mTextViewMax.setText(String.valueOf(maxDays));
