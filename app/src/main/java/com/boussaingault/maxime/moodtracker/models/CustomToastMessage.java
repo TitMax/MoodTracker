@@ -27,7 +27,10 @@ public class CustomToastMessage {
 
         Toast toast = new Toast(context);
         toast.setGravity(Gravity.BOTTOM, 0, 50);
-        toast.setDuration(Toast.LENGTH_LONG);
+        if (message.length() > 50)
+            toast.setDuration(Toast.LENGTH_LONG);
+        else
+            toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();
     }
