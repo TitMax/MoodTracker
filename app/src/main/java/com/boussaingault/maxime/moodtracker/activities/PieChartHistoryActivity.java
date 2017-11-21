@@ -60,6 +60,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
 
         mDatabaseManager = new DatabaseManager(this); // Open database
         maxDays = mDatabaseManager.isHistory(); // Get the count of entries using isHistory() method
+        mDatabaseManager.close();
 
         if(maxDays != 0) { // If there is an history
             // Initialize the display
@@ -116,16 +117,19 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         mPieChart.getPaint(Chart.PAINT_INFO).setTextSize(convertDpToPixel(16));
         mPieChart.setNoDataText("Pas encore d'historique? Revenez demain!");
         mPieChart.setNoDataTextColor(Color.BLACK);
+
+        System.out.println("PieChartHistoryActivity::onCreate()");
     }
 
     // Method to count number of each mood and set the pie chart data
     private void setData() {
+        mDatabaseManager = new DatabaseManager(this);
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < moods.length; i++) {
             if (mDatabaseManager.countMoods(moods[i], daysNumber) > 0)
                 entries.add(new PieEntry((float) mDatabaseManager.countMoods(moods[i], daysNumber), moodsFR[i]));
         }
-
+        mDatabaseManager.close();
         // Create pieDataSet
         PieDataSet dataSet = new PieDataSet(entries, "");
 
@@ -184,7 +188,6 @@ public class PieChartHistoryActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mDatabaseManager.close();
         System.out.println("PieChartHistoryActivity::onStop()");
     }
 
@@ -193,5 +196,4 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         super.onDestroy();
         System.out.println("PieChartHistoryActivity::onDestroy()");
     }
-
 }
