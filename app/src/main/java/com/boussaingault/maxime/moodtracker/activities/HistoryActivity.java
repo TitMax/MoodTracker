@@ -7,6 +7,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.boussaingault.maxime.moodtracker.R;
+import com.boussaingault.maxime.moodtracker.models.CustomToastMessage;
 import com.boussaingault.maxime.moodtracker.models.DatabaseManager;
 import com.boussaingault.maxime.moodtracker.models.HistoryListAdapter;
 import com.boussaingault.maxime.moodtracker.models.MoodData;
@@ -55,8 +56,9 @@ public class HistoryActivity extends AppCompatActivity {
             for (MoodData mood : listHistory)
                 listMoods.add(mood);
         } else {
-            Toast.makeText(this, "Pas encore d'historique? Revenez demain!", Toast.LENGTH_LONG).show();
+            CustomToastMessage.showMessage(this, "Pas encore d'historique? Revenez demain!");
             /*      UNCOMMENT BELOW TO POPULATE THE SQLITE DATABASE       */
+            /*
             String[] moods = {"Sad", "Disappointed", "Normal", "Happy", "Super Happy"};
             String[] color = {"faded_red", "warm_grey", "cornflower_blue_65", "light_sage", "banana_yellow"};
             mDatabaseManager.insertMood(moods[3],"",color[3], 1);
@@ -73,6 +75,7 @@ public class HistoryActivity extends AppCompatActivity {
             List<MoodData> listHistory = mDatabaseManager.mMoodData();
             for (MoodData mood : listHistory)
                 listMoods.add(mood);
+            */
         }
         mDatabaseManager.close();
         adapter = new HistoryListAdapter(this, R.layout.row_mood, listMoods);

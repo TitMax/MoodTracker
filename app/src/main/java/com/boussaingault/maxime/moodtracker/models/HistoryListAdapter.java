@@ -3,6 +3,7 @@ package com.boussaingault.maxime.moodtracker.models;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class HistoryListAdapter extends ArrayAdapter<MoodData> {
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), moodData.getComment(), Toast.LENGTH_SHORT).show();
+            CustomToastMessage.showMessage(context, moodData.getComment());
             }
         });
 
