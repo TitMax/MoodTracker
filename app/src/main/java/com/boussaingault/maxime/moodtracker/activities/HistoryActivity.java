@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.boussaingault.maxime.moodtracker.R;
 import com.boussaingault.maxime.moodtracker.models.CustomToastMessage;
@@ -37,10 +36,9 @@ public class HistoryActivity extends AppCompatActivity {
     }
     // Disable scroll touch events
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-        if(event.getAction() == MotionEvent.ACTION_MOVE) // Detect  a movement during a press gesture
-            event.setAction(MotionEvent.ACTION_CANCEL); // Abort the current gesture
-        return super.dispatchTouchEvent(event);
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        // Detect  a movement during a press gesture and consume it
+        return event.getAction() == MotionEvent.ACTION_MOVE || super.dispatchTouchEvent(event);
     }
 
     @Override
