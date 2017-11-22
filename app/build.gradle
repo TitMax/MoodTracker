@@ -16,6 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -24,7 +29,11 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2' // MPAndroidChart library
-    testImplementation 'junit:junit:4.12'
+    testImplementation (
+            'junit:junit:4.12',
+            'org.mockito:mockito-core:2.+', // Mocking framework
+            'org.robolectric:robolectric:3.5.1' // Unit testing framework
+    )
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
