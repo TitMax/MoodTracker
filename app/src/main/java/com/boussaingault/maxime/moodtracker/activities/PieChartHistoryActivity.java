@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.boussaingault.maxime.moodtracker.R;
 import com.boussaingault.maxime.moodtracker.models.DatabaseManager;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -20,7 +19,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DecimalFormat;
@@ -29,6 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.mikephil.charting.utils.Utils.convertDpToPixel;
+
+/**
+ * Created by Maxime Boussaingault on 20/11/2017.
+ */
 
 public class PieChartHistoryActivity extends AppCompatActivity {
 
