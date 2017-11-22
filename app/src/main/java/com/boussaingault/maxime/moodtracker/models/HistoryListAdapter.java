@@ -45,8 +45,8 @@ public class HistoryListAdapter extends ArrayAdapter<MoodData> {
             convertView = inflater.inflate(R.layout.row_mood, parent, false);
         }
 
-        textViewDate = (TextView) convertView.findViewById(R.id.row_mood_date_text_view);
-        imageButtonComment = (ImageButton) convertView.findViewById(R.id.row_mood_comment_image_btn);
+        textViewDate = convertView.findViewById(R.id.row_mood_date_text_view);
+        imageButtonComment = convertView.findViewById(R.id.row_mood_comment_image_btn);
 
         final MoodData moodData = listMood.get(position);
         textViewDate.setText(moodData.getDaysAgo());
@@ -90,7 +90,7 @@ public class HistoryListAdapter extends ArrayAdapter<MoodData> {
         convertView.setBackgroundColor(convertView.getResources().getColor(background));
         Point size = new Point();
         ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getSize(size);
-        frameLayout = (FrameLayout) convertView.findViewById(R.id.row_mood_frame_layout);
+        frameLayout = convertView.findViewById(R.id.row_mood_frame_layout);
         Double reductionX = size.x * (indice / 5);
         Double reductionY = size.y / 7d - 10;
         params = frameLayout.getLayoutParams();
