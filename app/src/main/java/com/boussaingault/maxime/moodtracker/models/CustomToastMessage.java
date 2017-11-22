@@ -23,7 +23,7 @@ public class CustomToastMessage {
         View layout = inflater.inflate(R.layout.custom_toast,
                 (ViewGroup) ((Activity) context).findViewById(R.id.custom_toast_container));
 
-        TextView text = (TextView) layout.findViewById(R.id.custom_toast_text);
+        TextView text = layout.findViewById(R.id.custom_toast_text);
         text.setText(message);
 
         Toast toast = new Toast(context);

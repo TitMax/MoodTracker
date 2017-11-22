@@ -44,9 +44,9 @@ public class MainActivity extends FragmentActivity {
 
         // Wire widgets
         mVerticalViewPager = findViewById(R.id.activity_main_view_pager);
-        mImageButtonAddNote = (ImageButton) findViewById(R.id.activity_main_note_add_btn);
-        mImageButtonHistory = (ImageButton) findViewById(R.id.activity_main_history_btn);
-        mImageButtonPieChart = (ImageButton) findViewById(R.id.activity_main_pie_chart_btn);
+        mImageButtonAddNote = findViewById(R.id.activity_main_note_add_btn);
+        mImageButtonHistory = findViewById(R.id.activity_main_history_btn);
+        mImageButtonPieChart = findViewById(R.id.activity_main_pie_chart_btn);
 
         // Open the alert dialog when click on the button
         mImageButtonAddNote.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +85,7 @@ public class MainActivity extends FragmentActivity {
         dialogBuilder.setView(dialogView);
 
         // wire the widget
-        mEditTextNote = (EditText) dialogView.findViewById(R.id.alert_dialog_edit_text);
+        mEditTextNote = dialogView.findViewById(R.id.alert_dialog_edit_text);
         // Change the editText bottom line color
         mEditTextNote.getBackground().setColorFilter(Color.rgb(0,142,125), PorterDuff.Mode.SRC_IN);
         mEditTextNote.setText(comment); // set the editText with the current comment variable

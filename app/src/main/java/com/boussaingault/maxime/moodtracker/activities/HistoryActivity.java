@@ -31,7 +31,7 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
 
         // Wire widget
-        mListView = (ListView) findViewById(R.id.activity_history_list_view);
+        mListView = findViewById(R.id.activity_history_list_view);
 
         System.out.println("HistoryActivity::onCreate()");
     }

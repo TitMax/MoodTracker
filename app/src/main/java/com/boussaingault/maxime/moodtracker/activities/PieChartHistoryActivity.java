@@ -51,12 +51,12 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pie_chart_history);
 
         // Wire widgets
-        mSeekBar = (SeekBar) findViewById(R.id.activity_piechart_history_seek_bar);
-        mPieChart = (PieChart) findViewById(R.id.activity_piechart_history_pie_chart);
-        mImageViewShadow = (ImageView) findViewById(R.id.activity_piechart_history_shadow_image);
-        mTextViewMin = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_min_value);
-        mTextViewMax = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_max_value);
-        mTextViewCurrent = (TextView) findViewById(R.id.activity_piechart_history_seek_bar_current_value);
+        mSeekBar = findViewById(R.id.activity_piechart_history_seek_bar);
+        mPieChart = findViewById(R.id.activity_piechart_history_pie_chart);
+        mImageViewShadow = findViewById(R.id.activity_piechart_history_shadow_image);
+        mTextViewMin = findViewById(R.id.activity_piechart_history_seek_bar_min_value);
+        mTextViewMax = findViewById(R.id.activity_piechart_history_seek_bar_max_value);
+        mTextViewCurrent = findViewById(R.id.activity_piechart_history_seek_bar_current_value);
 
         mDatabaseManager = new DatabaseManager(this); // Open database
         maxDays = mDatabaseManager.isHistory(); // Get the count of entries using isHistory() method
