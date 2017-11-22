@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.boussaingault.maxime.moodtracker.R;
 
 /**
- * Created by Tit Max on 21/11/2017.
+ * Created by Maxime Boussaingault on 21/11/2017.
  */
 
 // Method to create a custom toast message
