@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by Tit Max on 15/11/2017.
+ * Created by Maxime Boussaingault on 15/11/2017.
  */
 
 public class MoodData {
