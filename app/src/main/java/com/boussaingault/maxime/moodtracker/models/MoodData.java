@@ -17,11 +17,6 @@ public class MoodData {
 
     public MoodData() {}
 
-    public MoodData(String mood, String comment) {
-        this.mood = mood;
-        this.comment = comment;
-    }
-
     public MoodData(String date, String mood, String comment, String color) {
         this.mood = mood;
         this.color = color;
