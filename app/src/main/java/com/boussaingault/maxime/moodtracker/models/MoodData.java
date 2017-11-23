@@ -53,14 +53,6 @@ public class MoodData {
         this.comment = comment;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public String getDaysAgo() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String[] number = {"", "", "", "trois", "quatre", "cinq", "six"};
