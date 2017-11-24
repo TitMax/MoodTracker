@@ -1,63 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#CCC"
     tools:context="com.boussaingault.maxime.moodtracker.activities.PieChartHistoryActivity">
 
-    <ImageView
-        android:id="@+id/activity_piechart_history_shadow_image"
-        android:layout_width="326dp"
-        android:layout_height="326dp"
-        android:layout_gravity="top|center"
-        android:layout_marginTop="74dp"
-        android:layout_marginStart="4dp"
-        android:background="@drawable/donut_shadow"
-        android:visibility="gone"
-        android:alpha="0.10"/>
-
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/activity_piechart_history_pie_chart"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="475dp" />
-
-    <TextView
-        android:id="@+id/activity_piechart_history_seek_bar_min_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="47dp"
-        android:textColor="@android:color/black"
-        android:textSize="15sp" />
-
-    <TextView
-        android:id="@+id/activity_piechart_history_seek_bar_current_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="66dp"
-        android:textColor="@android:color/black"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/activity_piechart_history_seek_bar_max_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="43dp"
-        android:textColor="@android:color/black"
-        android:textSize="15sp" />
-
-    <SeekBar
-        android:id="@+id/activity_piechart_history_seek_bar"
+        android:layout_height="0dp"
+        android:layout_weight=".8">
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/activity_piechart_history_pie_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="38dp"
-        android:visibility="gone" />
+        android:layout_height="0dp"
+        android:layout_weight=".2">
+        <SeekBar
+            android:id="@+id/activity_piechart_history_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="38dp"
+            android:layout_marginEnd="38dp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/activity_piechart_history_seek_bar_min_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="50dp"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/activity_piechart_history_seek_bar_current_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="40dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/activity_piechart_history_seek_bar_max_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="43dp"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+    </FrameLayout>
+</LinearLayout>

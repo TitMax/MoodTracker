@@ -55,7 +55,6 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         // Wire widgets
         mSeekBar = findViewById(R.id.activity_piechart_history_seek_bar);
         mPieChart = findViewById(R.id.activity_piechart_history_pie_chart);
-        mImageViewShadow = findViewById(R.id.activity_piechart_history_shadow_image);
         mTextViewMin = findViewById(R.id.activity_piechart_history_seek_bar_min_value);
         mTextViewMax = findViewById(R.id.activity_piechart_history_seek_bar_max_value);
         mTextViewCurrent = findViewById(R.id.activity_piechart_history_seek_bar_current_value);
@@ -66,7 +65,6 @@ public class PieChartHistoryActivity extends AppCompatActivity {
 
         if(maxDays != 0) { // If there is an history
             // Initialize the display
-            mImageViewShadow.setVisibility(View.VISIBLE); // GONE by default
             mSeekBar.setVisibility(View.VISIBLE); // GONE by default
             mTextViewMin.setText(String.valueOf(MIN));
             mTextViewMax.setText(String.valueOf(maxDays));
@@ -112,6 +110,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
         l.setXOffset(10);
+        l.setYOffset(15);
 
         mPieChart.setTouchEnabled(false); // disable the touch on the pie chart (to disable rotation)
 
