@@ -52,7 +52,7 @@ public class MainActivity extends FragmentActivity {
         mImageButtonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddNoteDialog();
+                addNoteDialog();
             }
         });
 
@@ -77,7 +77,7 @@ public class MainActivity extends FragmentActivity {
         System.out.println("MainActivity::onCreate()");
     }
     // Custom alert dialog
-    private void AddNoteDialog() {
+    public void addNoteDialog() {
         // Create the dialogBuilder and wire the custom style on it
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
         LayoutInflater inflater = this.getLayoutInflater();
