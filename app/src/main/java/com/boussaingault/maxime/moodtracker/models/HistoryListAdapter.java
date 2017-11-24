@@ -54,7 +54,8 @@ public class HistoryListAdapter extends ArrayAdapter<MoodData> {
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomToastMessage.showMessage(context, moodData.getComment());
+                CustomToastMessage customToastMessage = new CustomToastMessage();
+                customToastMessage.showMessage(context, moodData.getComment());
             }
         });
 

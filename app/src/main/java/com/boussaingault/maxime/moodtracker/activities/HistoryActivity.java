@@ -55,7 +55,8 @@ public class HistoryActivity extends AppCompatActivity {
             createListHistory(); // call the createListHistory() method
         } else { // if no history
             // Send a toast
-            CustomToastMessage.showMessage(this, "Pas encore d'historique? Revenez demain!");
+            CustomToastMessage customToastMessage = new CustomToastMessage();
+            customToastMessage.showMessage(this, "Pas encore d'historique? Revenez demain!");
             /*      UNCOMMENT BELOW TO POPULATE THE SQLITE DATABASE       */
 //            populateDatabase();
         }
