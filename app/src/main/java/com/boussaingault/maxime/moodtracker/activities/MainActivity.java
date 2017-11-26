@@ -150,7 +150,7 @@ public class MainActivity extends FragmentActivity {
         int i = mVerticalViewPager.getCurrentItem(); // get the current pager position
         // Insert or replace the current mood, comment and color in the database
         mDatabaseManager = new DatabaseManager(this);
-        mDatabaseManager.insertMood(mood[i], comment, color[i]);
+        mDatabaseManager.insertMood(mood[i], color[i], comment);
         mDatabaseManager.close();
         System.out.println("MainActivity::onPause()");
     }

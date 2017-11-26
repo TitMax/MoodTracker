@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class HistoryListAdapter extends ArrayAdapter<MoodData> {
 
-    private ArrayList<MoodData> listMood = new ArrayList<MoodData>();
+    private ArrayList<MoodData> listMood = new ArrayList<>();
     private Context context;
     private String[] backgroundColor = {"faded_red", "warm_grey", "cornflower_blue_65", "light_sage", "banana_yellow"};
 

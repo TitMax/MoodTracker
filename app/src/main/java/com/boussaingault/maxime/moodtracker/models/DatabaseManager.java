@@ -18,8 +18,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String COL_ID = "ID";
     public static final String COL_MOOD = "MOOD";
-    public static final String COL_COMMENT = "COMMENT";
     public static final String COL_COLOR = "COLOR";
+    public static final String COL_COMMENT = "COMMENT";
     public static final String COL_DATE = "DATE";
     public static final String TABLE_NAME = "MOOD_HISTORY";
 
@@ -27,8 +27,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_NAME + " (" +
                     COL_ID + " INTEGER PRIMARY KEY, " +
                     COL_MOOD + " TEXT NOT NULL, " +
+                    COL_COLOR + " TEXT NOT NULL, " +
                     COL_COMMENT + " TEXT, " +
-                    COL_COLOR + " TEXT, " +
                     COL_DATE + " TEXT UNIQUE)";
 
     public static final String TABLE_DROP = "DROP TABLE " + TABLE_NAME;
@@ -48,41 +48,41 @@ public class DatabaseManager extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertMood(String mood, String comment, String color) {
+    public void insertMood(String mood,String color, String comment) {
         mood = mood.replace("'", "''");
-        comment = comment.replace("'", "''");
         color = color.replace("'", "''");
+        comment = comment.replace("'", "''");
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Replace if there is already an entry the current day, else Insert a new row
         final String ROW_INSERT = "REPLACE INTO " + TABLE_NAME +
-                " (" + COL_ID + ", " + COL_MOOD + ", " + COL_COMMENT + ", " + COL_COLOR + ", " + COL_DATE + ") " +
+                " (" + COL_ID + ", " + COL_MOOD + ", " + COL_COLOR + ", " + COL_COMMENT + ", " + COL_DATE + ") " +
                 "VALUES ((SELECT " + COL_ID +
                 " FROM " + TABLE_NAME +
                 " WHERE " + COL_DATE + " = DATE ('NOW', 'LOCALTIME')), '"
-                + mood + "', '" + comment + "', '" + color + "', DATE('NOW', 'LOCALTIME'))";
+                + mood + "', '" + color + "', '" + comment + "', DATE('NOW', 'LOCALTIME'))";
         db.execSQL(ROW_INSERT);
     }
 
     // Used when manually populating
-    public void insertMood(String mood, String comment, String color, int daysAgo) {
+    public void insertMood(String mood, String color, String comment, int daysAgo) {
         mood = mood.replace("'", "''");
-        comment = comment.replace("'", "''");
         color = color.replace("'", "''");
+        comment = comment.replace("'", "''");
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         final String ROW_INSERT = "INSERT INTO " + TABLE_NAME +
-                " (" + COL_MOOD + ", " + COL_COMMENT + ", " + COL_COLOR + ", " + COL_DATE + ") " +
-                "VALUES ('" + mood + "', '" + comment + "', '" + color + "'," +
+                " (" + COL_MOOD + ", " + COL_COLOR + ", " + COL_COMMENT + ", " + COL_DATE + ") " +
+                "VALUES ('" + mood + "', '" + color + "', '" + comment + "'," +
                 "DATE('NOW', 'LOCALTIME', 'START OF DAY', '-" + daysAgo + " DAY'))";
         db.execSQL(ROW_INSERT);
     }
 
     public MoodData getCurrentMood() {
         Cursor cursor = getReadableDatabase().query(TABLE_NAME,
-                new String[]{COL_ID, COL_MOOD, COL_COMMENT, COL_COLOR, COL_DATE},
+                new String[]{COL_ID, COL_MOOD, COL_COLOR, COL_COMMENT, COL_DATE},
                 COL_DATE + " LIKE DATE('NOW', 'LOCALTIME', 'START OF DAY')",
                 null, null, null, null);
         return cursorToMood(cursor);
@@ -94,7 +94,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cursor.moveToFirst();
         MoodData currentMood = new MoodData();
         currentMood.setMood(cursor.getString(1));
-        currentMood.setComment(cursor.getString(2));
+        currentMood.setColor(cursor.getString(2));
+        currentMood.setComment(cursor.getString(3));
+        currentMood.setDate(cursor.getString(4));
         cursor.close();
         return currentMood;
     }

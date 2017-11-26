@@ -17,7 +17,7 @@ public class MoodData {
 
     public MoodData() {}
 
-    public MoodData(String date, String mood, String comment, String color) {
+    public MoodData(String date, String mood, String color, String comment) {
         this.mood = mood;
         this.color = color;
         this.comment = comment;
@@ -48,6 +48,14 @@ public class MoodData {
         this.comment = comment;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public String getDaysAgo() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String[] number = {"", "", "", "trois", "quatre", "cinq", "six"};
@@ -67,6 +75,6 @@ public class MoodData {
 
     @Override
     public String toString() {
-        return getDaysAgo() + " " + mood + " " + comment + " " + color ;
+        return getDaysAgo() + " " + mood + " " + color + " " + comment ;
     }
 }
