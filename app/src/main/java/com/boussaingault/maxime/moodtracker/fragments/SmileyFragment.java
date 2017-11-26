@@ -24,8 +24,11 @@ public class SmileyFragment extends Fragment {
     private View mView;
     private ImageView mImageView;
 
+    // Create a new instance of SmileyFragment, initialized to show the mood and the background color
     public static SmileyFragment newInstance(String mood, String background) {
         SmileyFragment smileyFragment = new SmileyFragment();
+
+        // Supply mood and background as arguments
         Bundle args = new Bundle();
         args.putString(MOOD, mood);
         args.putString(BACKGROUND, background);
@@ -33,6 +36,7 @@ public class SmileyFragment extends Fragment {
         return smileyFragment;
     }
 
+    // When creating, retrieve this instance's mood and background color from its arguments
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,7 @@ public class SmileyFragment extends Fragment {
         mBackground = getArguments() != null ? getArguments().getString(BACKGROUND) : "light_sage";
     }
 
+    // The fragment's UI show its instance mood and background color
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_smiley, container, false);

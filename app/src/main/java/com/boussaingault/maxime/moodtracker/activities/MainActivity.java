@@ -29,6 +29,7 @@ public class MainActivity extends FragmentActivity {
     private VerticalViewPager mVerticalViewPager;
     private ImageButton mImageButtonAddNote;
     private ImageButton mImageButtonHistory;
+    private ImageButton mImageButtonPieChart;
     private EditText mEditTextNote;
     private String comment = "";
     private String[] mood = {"Sad", "Disappointed", "Normal", "Happy", "Super Happy"};
@@ -40,17 +41,22 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mVerticalViewPager = findViewById(R.id.activity_main_view_pager);
-        mImageButtonAddNote = (ImageButton) findViewById(R.id.activity_main_note_add_btn);
-        mImageButtonHistory = (ImageButton) findViewById(R.id.activity_main_history_btn);
 
+        // Wire widgets
+        mVerticalViewPager = findViewById(R.id.activity_main_view_pager);
+        mImageButtonAddNote = findViewById(R.id.activity_main_note_add_btn);
+        mImageButtonHistory = findViewById(R.id.activity_main_history_btn);
+        mImageButtonPieChart = findViewById(R.id.activity_main_pie_chart_btn);
+
+        // Open the alert dialog when click on the button
         mImageButtonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddNoteDialog();
+                addNoteDialog();
             }
         });
 
+        // Open the History activity when click on the button
         mImageButtonHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,38 +64,55 @@ public class MainActivity extends FragmentActivity {
                 startActivity(intent);
             }
         });
-    }
 
-    private void AddNoteDialog() {
+        // Open the Pie Chart History activity when click on the button
+        mImageButtonPieChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, PieChartHistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        System.out.println("MainActivity::onCreate()");
+    }
+    // Custom alert dialog
+    public void addNoteDialog() {
+        // Create the dialogBuilder and wire the custom style on it
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.alert_dialog, null, false);
         dialogBuilder.setView(dialogView);
 
-        mEditTextNote = (EditText) dialogView.findViewById(R.id.alert_dialog_edit_text);
+        // wire the widget
+        mEditTextNote = dialogView.findViewById(R.id.alert_dialog_edit_text);
+        // Change the editText bottom line color
         mEditTextNote.getBackground().setColorFilter(Color.rgb(0,142,125), PorterDuff.Mode.SRC_IN);
-        mEditTextNote.setText(comment);
-        mEditTextNote.setSelection(mEditTextNote.length());
+        mEditTextNote.setText(comment); // set the editText with the current comment variable
+        mEditTextNote.setSelection(mEditTextNote.length()); // set the cursor to the end of the text
 
+        // When click on the submit button
         dialogBuilder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (mEditTextNote.getText().toString().equals("")) {
-                    comment = mEditTextNote.getText().toString();
+                if (mEditTextNote.getText().toString().trim().equals("")) { // If no text or cleared by the user
+                    comment = ""; // Clear the comment variable
                 }
                 else {
-                    comment = mEditTextNote.getText().toString();
+                    comment = mEditTextNote.getText().toString().trim(); // Add text to the comment variable
                 }
             }
         });
+        // When click on the cancel button
         dialogBuilder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // Do Nothing, just close the Alert Dialog
             }
         });
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
+
+        AlertDialog alertDialog = dialogBuilder.create(); // Create the alert dialog
+        alertDialog.show(); // Show the alert dialog
     }
 
     @Override
@@ -101,32 +124,40 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Open the database
         mDatabaseManager = new DatabaseManager(this);
+        // Get the current mood from the database
         MoodData currentMood = mDatabaseManager.getCurrentMood();
-        if(currentMood != null) {
+        if(currentMood != null) { // if current mood found in the database
+            // find the corresponding id of the mood in the mood table
             currentMoodId = Arrays.asList(mood).indexOf(currentMood.getMood());
-            comment = currentMood.getComment();
-        } else {
-            currentMoodId = 3;
-            comment = "";
+            comment = currentMood.getComment(); // get the comment from the database
+        } else { // if no current mood
+            currentMoodId = 3; // Initialize the current mood to happy
+            comment = ""; // Clear comment
         }
+        mDatabaseManager.close(); // Close the database
+        // set the ViewPagerAdapter to show fragments
         mVerticalViewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
-        mVerticalViewPager.setCurrentItem(currentMoodId);
+        mVerticalViewPager.setCurrentItem(currentMoodId); // Set the pager to the current mood fragment
         System.out.println("MainActivity::onResume()");
     }
 
+    // Called every times we leave this activity (phone call or activity change)
     @Override
     protected void onPause() {
         super.onPause();
-        int i = mVerticalViewPager.getCurrentItem();
-        mDatabaseManager.insertMood(mood[i], comment, color[i]);
+        int i = mVerticalViewPager.getCurrentItem(); // get the current pager position
+        // Insert or replace the current mood, comment and color in the database
+        mDatabaseManager = new DatabaseManager(this);
+        mDatabaseManager.insertMood(mood[i], color[i], comment);
+        mDatabaseManager.close();
         System.out.println("MainActivity::onPause()");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mDatabaseManager.close();
         System.out.println("MainActivity::onStop()");
     }
 

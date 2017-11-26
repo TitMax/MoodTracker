@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.boussaingault.maxime.moodtracker.fragments.SmileyFragment;
 
 /**
- * Created by Tit Max on 16/11/2017.
+ * Created by Maxime Boussaingault on 16/11/2017.
  */
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {

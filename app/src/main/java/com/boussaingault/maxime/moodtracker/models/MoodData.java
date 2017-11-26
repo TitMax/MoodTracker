@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by Tit Max on 15/11/2017.
+ * Created by Maxime Boussaingault on 15/11/2017.
  */
 
 public class MoodData {
@@ -17,12 +17,7 @@ public class MoodData {
 
     public MoodData() {}
 
-    public MoodData(String mood, String comment) {
-        this.mood = mood;
-        this.comment = comment;
-    }
-
-    public MoodData(String date, String mood, String comment, String color) {
+    public MoodData(String date, String mood, String color, String comment) {
         this.mood = mood;
         this.color = color;
         this.comment = comment;
@@ -80,6 +75,6 @@ public class MoodData {
 
     @Override
     public String toString() {
-        return getDaysAgo() + " " + mood + " " + comment + " " + color ;
+        return getDaysAgo() + " " + mood + " " + color + " " + comment ;
     }
 }

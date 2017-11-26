@@ -2,6 +2,7 @@
     <string name="app_name">MoodTracker</string>
     <string name="note_add_desc">Add note button</string>
     <string name="history_desc">History button</string>
+    <string name="pie_chart_desc">Pie Chart button</string>
     <string name="smiley_desc">Smiley image</string>
     <string name="comment_desc">Comment button</string>
     <string name="text">text</string>

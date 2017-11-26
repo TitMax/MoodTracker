@@ -12,19 +12,18 @@ import android.widget.FrameLayout;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.boussaingault.maxime.moodtracker.R;
 
 import java.util.ArrayList;
 
 /**
- * Created by Tit Max on 15/11/2017.
+ * Created by Maxime Boussaingault on 15/11/2017.
  */
 
 public class HistoryListAdapter extends ArrayAdapter<MoodData> {
 
-    private ArrayList<MoodData> listMood = new ArrayList<MoodData>();
+    private ArrayList<MoodData> listMood = new ArrayList<>();
     private Context context;
     private String[] backgroundColor = {"faded_red", "warm_grey", "cornflower_blue_65", "light_sage", "banana_yellow"};
 
@@ -44,8 +43,8 @@ public class HistoryListAdapter extends ArrayAdapter<MoodData> {
             convertView = inflater.inflate(R.layout.row_mood, parent, false);
         }
 
-        textViewDate = (TextView) convertView.findViewById(R.id.row_mood_date_text_view);
-        imageButtonComment = (ImageButton) convertView.findViewById(R.id.row_mood_comment_image_btn);
+        textViewDate = convertView.findViewById(R.id.row_mood_date_text_view);
+        imageButtonComment = convertView.findViewById(R.id.row_mood_comment_image_btn);
 
         final MoodData moodData = listMood.get(position);
         textViewDate.setText(moodData.getDaysAgo());
@@ -55,7 +54,8 @@ public class HistoryListAdapter extends ArrayAdapter<MoodData> {
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), moodData.getComment(), Toast.LENGTH_SHORT).show();
+                CustomToastMessage customToastMessage = new CustomToastMessage();
+                customToastMessage.showMessage(context, moodData.getComment());
             }
         });
 
@@ -89,7 +89,7 @@ public class HistoryListAdapter extends ArrayAdapter<MoodData> {
         convertView.setBackgroundColor(convertView.getResources().getColor(background));
         Point size = new Point();
         ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getSize(size);
-        frameLayout = (FrameLayout) convertView.findViewById(R.id.row_mood_frame_layout);
+        frameLayout = convertView.findViewById(R.id.row_mood_frame_layout);
         Double reductionX = size.x * (indice / 5);
         Double reductionY = size.y / 7d - 10;
         params = frameLayout.getLayoutParams();

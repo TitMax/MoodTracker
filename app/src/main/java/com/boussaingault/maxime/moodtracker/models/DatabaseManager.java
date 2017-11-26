@@ -18,8 +18,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String COL_ID = "ID";
     public static final String COL_MOOD = "MOOD";
-    public static final String COL_COMMENT = "COMMENT";
     public static final String COL_COLOR = "COLOR";
+    public static final String COL_COMMENT = "COMMENT";
     public static final String COL_DATE = "DATE";
     public static final String TABLE_NAME = "MOOD_HISTORY";
 
@@ -27,8 +27,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_NAME + " (" +
                     COL_ID + " INTEGER PRIMARY KEY, " +
                     COL_MOOD + " TEXT NOT NULL, " +
+                    COL_COLOR + " TEXT NOT NULL, " +
                     COL_COMMENT + " TEXT, " +
-                    COL_COLOR + " TEXT, " +
                     COL_DATE + " TEXT UNIQUE)";
 
     public static final String TABLE_DROP = "DROP TABLE " + TABLE_NAME;
@@ -48,31 +48,41 @@ public class DatabaseManager extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertMood(String mood, String comment, String color) {
+    public void insertMood(String mood,String color, String comment) {
         mood = mood.replace("'", "''");
-        comment = comment.replace("'", "''");
         color = color.replace("'", "''");
+        comment = comment.replace("'", "''");
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Replace if there is already an entry the current day, else Insert a new row
         final String ROW_INSERT = "REPLACE INTO " + TABLE_NAME +
-                " (" + COL_ID + ", " + COL_MOOD + ", " + COL_COMMENT + ", " + COL_COLOR + ", " + COL_DATE + ") " +
+                " (" + COL_ID + ", " + COL_MOOD + ", " + COL_COLOR + ", " + COL_COMMENT + ", " + COL_DATE + ") " +
                 "VALUES ((SELECT " + COL_ID +
                 " FROM " + TABLE_NAME +
                 " WHERE " + COL_DATE + " = DATE ('NOW', 'LOCALTIME')), '"
-                + mood + "', '" + comment + "', '" + color + "', DATE('NOW', 'LOCALTIME'))";
+                + mood + "', '" + color + "', '" + comment + "', DATE('NOW', 'LOCALTIME'))";
+        db.execSQL(ROW_INSERT);
+    }
+
+    // Used when manually populating
+    public void insertMood(String mood, String color, String comment, int daysAgo) {
+        mood = mood.replace("'", "''");
+        color = color.replace("'", "''");
+        comment = comment.replace("'", "''");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        final String ROW_INSERT = "INSERT INTO " + TABLE_NAME +
+                " (" + COL_MOOD + ", " + COL_COLOR + ", " + COL_COMMENT + ", " + COL_DATE + ") " +
+                "VALUES ('" + mood + "', '" + color + "', '" + comment + "'," +
+                "DATE('NOW', 'LOCALTIME', 'START OF DAY', '-" + daysAgo + " DAY'))";
         db.execSQL(ROW_INSERT);
     }
 
     public MoodData getCurrentMood() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        MoodData currentMood = new MoodData();
-        String selectCurrent = "SELECT * " +
-                "FROM " + TABLE_NAME + " " +
-                "WHERE DATE('NOW', 'LOCALTIME', 'START OF DAY')";
-        Cursor cursor = db.query(TABLE_NAME,
-                new String[]{COL_ID, COL_MOOD, COL_COMMENT, COL_COLOR, COL_DATE},
+        Cursor cursor = getReadableDatabase().query(TABLE_NAME,
+                new String[]{COL_ID, COL_MOOD, COL_COLOR, COL_COMMENT, COL_DATE},
                 COL_DATE + " LIKE DATE('NOW', 'LOCALTIME', 'START OF DAY')",
                 null, null, null, null);
         return cursorToMood(cursor);
@@ -84,18 +94,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
         cursor.moveToFirst();
         MoodData currentMood = new MoodData();
         currentMood.setMood(cursor.getString(1));
-        currentMood.setComment(cursor.getString(2));
+        currentMood.setColor(cursor.getString(2));
+        currentMood.setComment(cursor.getString(3));
+        currentMood.setDate(cursor.getString(4));
         cursor.close();
         return currentMood;
     }
+
     public List<MoodData> mMoodData() {
-        SQLiteDatabase db = this.getReadableDatabase();
         List<MoodData> listMoods = new ArrayList<>();
         String selectMood = "SELECT * " +
                 "FROM " + TABLE_NAME + " " +
-                "WHERE DATE BETWEEN DATE('NOW', 'LOCALTIME', 'START OF DAY', '-7 DAY') " +
+                "WHERE " + COL_DATE + " BETWEEN DATE('NOW', 'LOCALTIME', 'START OF DAY', '-7 DAY') " +
                 "AND DATE('NOW', 'LOCALTIME', 'START OF DAY', '-1 DAY')";
-        Cursor cursor = db.rawQuery(selectMood, null);
+        Cursor cursor = getReadableDatabase().rawQuery(selectMood, null);
 
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
@@ -106,7 +118,45 @@ public class DatabaseManager extends SQLiteOpenHelper {
             listMoods.add(moodData);
             cursor.moveToNext();
         }
-        db.close();
+        cursor.close();
         return listMoods;
+    }
+
+    // To verify if there are entry before current day
+    public int isHistory() {
+        int count = 0;
+        String selectCount =  "SELECT COUNT (*)" +
+                " FROM " + TABLE_NAME +
+                " WHERE " + COL_DATE + " < DATE('NOW', 'START OF DAY')";
+        Cursor cursor = getReadableDatabase().rawQuery(selectCount, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+
+    public int countMoods(String mood, int days) {
+        int moodCount = 0;
+
+        String countMood =  "SELECT COUNT (*)" +
+                " FROM " + TABLE_NAME +
+                " WHERE " + COL_MOOD + " = '" + mood + "'" +
+                " AND " + COL_DATE;
+        if(days == 0) {
+            countMood += " < DATE('NOW', 'START OF DAY')";
+        } else {
+            countMood += " BETWEEN DATE('NOW', 'LOCALTIME', 'START OF DAY', '-" + days +
+                    " DAY') AND DATE('NOW', 'LOCALTIME', 'START OF DAY', '-1 DAY')";
+        }
+        Cursor cursor = getReadableDatabase().rawQuery(countMood, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            moodCount = cursor.getInt(0);
+        }
+        cursor.close();
+        return moodCount;
     }
 }
