@@ -40,7 +40,7 @@ public class PieChartHistoryActivity extends AppCompatActivity {
     private TextView mTextViewCurrent;
     private DatabaseManager mDatabaseManager;
     private String[] moods = {"Sad", "Disappointed", "Normal", "Happy", "Super Happy"};
-    private String[] moodsFR = {"Triste", "Déçu", "Normal", "Heureux", "Super Heureux"};
+    private String[] moodsFR = {"Triste", "Déçu", "Normal", "Joyeux", "Super Joyeux"};
     private int maxDays = 0;
     private static final int MIN = 7;
     private int daysNumber = 7;
