@@ -125,7 +125,6 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         mDatabaseManager = new DatabaseManager(this);
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < moods.length; i++) {
-            if (mDatabaseManager.countMoods(moods[i], daysNumber) > 0)
                 entries.add(new PieEntry((float) mDatabaseManager.countMoods(moods[i], daysNumber), moodsFR[i]));
         }
         mDatabaseManager.close();
@@ -162,7 +161,9 @@ public class PieChartHistoryActivity extends AppCompatActivity {
 
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            return mFormat.format(value) + "%";
+            if (value > 0)
+                return mFormat.format(value) + "%";
+            else return "";
         }
     }
 
