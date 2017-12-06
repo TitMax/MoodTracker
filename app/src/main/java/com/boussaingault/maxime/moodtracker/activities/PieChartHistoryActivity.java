@@ -3,6 +3,7 @@ package com.boussaingault.maxime.moodtracker.activities;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -64,18 +65,36 @@ public class PieChartHistoryActivity extends AppCompatActivity {
         if(maxDays != 0) { // If there is an history
             // Initialize the display
             mSeekBar.setVisibility(View.VISIBLE); // GONE by default
-            mTextViewMin.setText(String.valueOf(MIN));
-            mTextViewMax.setText(String.valueOf(maxDays));
-            mTextViewCurrent.setText(MessageFormat.format("{0} jours", daysNumber));
+            if (maxDays <= 7) {
+                mTextViewMin.setText("1");
+                mTextViewMax.setText(String.valueOf(maxDays));
+                if (maxDays == 1)
+                    mTextViewCurrent.setText(MessageFormat.format("{0} jour", maxDays));
+                else
+                    mTextViewCurrent.setText(MessageFormat.format("{0} jours", maxDays));
+                mSeekBar.setMax(maxDays);
+                mSeekBar.setProgress(maxDays);
+                // SeekBar locked the first week
+                mSeekBar.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        return true;
+                    }
+                });
+            } else {
+                mTextViewMin.setText(String.valueOf(MIN));
+                mTextViewMax.setText(String.valueOf(maxDays));
+                mTextViewCurrent.setText(MessageFormat.format("{0} jours", daysNumber));
+            }
             setData(); // Call piechart setData() method
         }
 
         mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mSeekBar.setMax(maxDays - MIN); // subtract the minimal value (7)
-                daysNumber = progress + MIN; // Add the minimum value (7)
-                mTextViewCurrent.setText(MessageFormat.format("{0} jours", daysNumber));
+                    mSeekBar.setMax(maxDays - MIN); // subtract the minimal value (7)
+                    daysNumber = progress + MIN; // Add the minimum value (7)
+                    mTextViewCurrent.setText(MessageFormat.format("{0} jours", daysNumber));
             }
 
             @Override
