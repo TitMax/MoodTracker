@@ -127,7 +127,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         int count = 0;
         String selectCount =  "SELECT COUNT (*)" +
                 " FROM " + TABLE_NAME +
-                " WHERE " + COL_DATE + " < DATE('NOW', 'START OF DAY')";
+                " WHERE " + COL_DATE + " < DATE('NOW', 'LOCALTIME', 'START OF DAY')";
         Cursor cursor = getReadableDatabase().rawQuery(selectCount, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -145,7 +145,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 " WHERE " + COL_MOOD + " = '" + mood + "'" +
                 " AND " + COL_DATE;
         if(days == 0) {
-            countMood += " < DATE('NOW', 'START OF DAY')";
+            countMood += " < DATE('NOW', 'LOCALTIME', 'START OF DAY')";
         } else {
             countMood += " BETWEEN DATE('NOW', 'LOCALTIME', 'START OF DAY', '-" + days +
                     " DAY') AND DATE('NOW', 'LOCALTIME', 'START OF DAY', '-1 DAY')";
